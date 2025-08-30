@@ -19,5 +19,5 @@ async fn main() {
 
 // Gestionnaire pour la route "/"
 async fn handler() -> &'static str {
-    "Bonjour, monde !"
+    "Bonjour, monde ! 🤣\n"
 }
