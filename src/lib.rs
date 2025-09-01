@@ -1,4 +1,4 @@
-use axum::{routing::get, Router};
+use axum::{Router, routing::get};
 
 async fn hello_world() -> &'static str {
     "Hello, World! 🤣"

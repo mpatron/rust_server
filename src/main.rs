@@ -1,6 +1,6 @@
 use axum_server::Server;
-use std::net::SocketAddr;
-use rust_server::app;  // Import the app from lib.rs
+use rust_server::app;
+use std::net::SocketAddr; // Import the app from lib.rs
 
 #[tokio::main]
 async fn main() {
