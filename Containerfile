@@ -15,9 +15,9 @@ FROM alpine
 
 RUN apk add --no-cache libgcc curl
 
-COPY --from=builder /usr/src/app/target/release/rust-server /usr/local/bin/rust-server
+COPY --from=builder /usr/src/app/target/release/rust_server /usr/local/bin/rust_server
 
 # 🔥 Expose le port 8000
 EXPOSE 8000
 
-CMD ["rust-server"]
+CMD ["rust_server"]
