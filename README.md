@@ -2,9 +2,9 @@
 
 ~~~bash
 podman build -t rust-alpine-app .
-podman run --publish 8000:8000 --network host --rm --detach --replace --name rust-alpine-app rust-alpine-app
-# podman run --publish 8000:8000                --rm --detach --replace --name rust-alpine-app rust-alpine-app
-curl http://127.0.0.1:8000/
+# podman run --publish 8000 --network host --rm --detach --replace --name rust-alpine-app rust-alpine-app
+podman run --publish 8888:8000 --rm --detach --replace --name rust-alpine-app rust-alpine-app
+curl http://127.0.0.1:8888/
 podman exec -it rust-alpine-app /bin/sh
 ~~~
 
