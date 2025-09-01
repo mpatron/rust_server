@@ -12,6 +12,7 @@ podman exec -it rust-alpine-app /bin/sh
 
 ~~~bash
 # https://sagiegurari.github.io/cargo-make/
+# https://github.com/sagiegurari/cargo-make
 mpatron@mylinux:hello-rocket$ cargo install --no-default-features --force cargo-make
 mpatron@mylinux:hello-rocket$ cargo make my-flow
 ~~~
@@ -24,6 +25,8 @@ cargo make my-flow
 ~~~
 
 ## Test
+
+[https://www.ruststepbystep.com/how-to-test-axum-apis-unit-and-integration-testing-guide/]()
 
 ~~~bash
 cargo test --test api_tests
