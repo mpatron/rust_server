@@ -17,9 +17,23 @@ command = "cargo"
 args = ["test"]
 dependencies = ["clean"]
 
-[tasks.my-flow]
+[tasks.default]
 dependencies = [
     "format",
     "build",
     "test"
 ]
+
+[tasks.container]
+command = "podman"
+args = ["build", "-t", "rust-alpine-app", "."]
+
+[tasks.container-run]
+command = "podman"
+args = ["run", "--publish", "8888:8000", "--rm", "--detach", "--replace", "--name", "rust-alpine-app", "rust-alpine-app"]
+dependencies = ["container"]
+
+[tasks.container-test]
+command = "curl"
+args = ["http://127.0.0.1:8888"]
+dependencies = ["container-run"]

@@ -21,7 +21,8 @@ mpatron@mylinux:hello-rocket$ cargo make my-flow
 
 ~~~bash
 cargo install --force cargo-make
-cargo make my-flow
+cargo make
+cargo make container-test
 ~~~
 
 ## Test
