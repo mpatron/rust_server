@@ -3,9 +3,12 @@ use axum_server::Server;
 use reqwest::Client;
 use rust_server::app;
 use std::net::SocketAddr; // Import the app from lib.rs
+use tracing::info;
 
 #[tokio::test]
 async fn test_hello_world_integration() {
+    info!("Running test intégration test_hello_world_integration");
+
     // Set up the app
     let app = app();
 
@@ -22,4 +25,5 @@ async fn test_hello_world_integration() {
     assert_eq!(res.status(), StatusCode::OK);
     let body = res.text().await.unwrap();
     assert_eq!(body, "Hello, World! 🤣");
+    info!("test_hello_world_integration passed");
 }

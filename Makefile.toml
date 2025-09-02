@@ -26,11 +26,11 @@ dependencies = [
 
 [tasks.container]
 command = "podman"
-args = ["build", "-t", "rust-alpine-app", "."]
+args = ["build", "-t", "rust-app", "-f", "Containerfile_deb"]
 
 [tasks.container-run]
 command = "podman"
-args = ["run", "--publish", "8888:8000", "--rm", "--detach", "--replace", "--name", "rust-alpine-app", "rust-alpine-app"]
+args = ["run", "--publish", "8888:8000", "--rm", "--detach", "--replace", "--name", "rust-app", "rust-app"]
 dependencies = ["container"]
 
 [tasks.container-test]

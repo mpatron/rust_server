@@ -1,11 +1,11 @@
 # Construction de l'image docker avec podman
 
 ~~~bash
-podman build -t rust-alpine-app .
-# podman run --publish 8000 --network host --rm --detach --replace --name rust-alpine-app rust-alpine-app
-podman run --publish 8888:8000 --rm --detach --replace --name rust-alpine-app rust-alpine-app
+podman build -t rust-app .
+# podman run --publish 8000 --network host --rm --detach --replace --name rust-app rust-app
+podman run --publish 8888:8000 --rm --detach --replace --name rust-app rust-app
 curl http://127.0.0.1:8888/
-podman exec -it rust-alpine-app /bin/sh
+podman exec -it rust-app /bin/sh
 ~~~
 
 ## Builder
