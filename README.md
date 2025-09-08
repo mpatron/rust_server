@@ -31,6 +31,7 @@ cargo make container-test
 
 ~~~bash
 cargo test --test api_tests
+podman run -it --publish 8888:8000 --rm --replace --name rust-app rust-app
 ~~~
 
 Clean podman
