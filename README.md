@@ -32,3 +32,17 @@ cargo make container-test
 ~~~bash
 cargo test --test api_tests
 ~~~
+
+Clean podman
+
+~~~bash
+#Install podman
+podman kill $(podman ps -q)
+podman rm $(podman ps -a -q)
+podman rmi $(podman images -q)
+podman rmi --all --force
+podman image prune --all --force
+podman container prune --force
+podman volume prune --force
+podman network prune --force
+~~~

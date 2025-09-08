@@ -42,7 +42,7 @@ LABEL org.opencontainers.image.licenses="MIT"
 # Création d’un utilisateur non-root (optionnel mais recommandé)
 RUN useradd -m appuser
 
-# Copie du binaire compilé
+# Remplace `mon-projet` par le nom réel de ton binaire
 COPY --from=builder /app/target/release/rust_server /usr/local/bin/app
 
 USER appuser
