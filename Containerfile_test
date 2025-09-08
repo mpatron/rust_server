@@ -29,6 +29,15 @@ RUN cargo build --release
 
 # 🚀 Étape 3 : Image finale minimale
 FROM debian:buster-slim
+LABEL maintainer="Mickael PATRON"
+LABEL org.opencontainers.image.authors="Mickael PATRON"
+LABEL org.opencontainers.image.url="https://github.com/mpatron/rust_server"
+LABEL org.opencontainers.image.documentation="https://github.com/mpatron/rust_server/README.md"
+LABEL org.opencontainers.image.source="https://github.com/mpatron/rust_server"
+LABEL org.opencontainers.image.version="1.0.0"
+LABEL org.opencontainers.image.revision="1.0.0"
+LABEL org.opencontainers.image.vendor="Mickael PATRON"
+LABEL org.opencontainers.image.licenses="MIT"
 
 # Création d’un utilisateur non-root (optionnel mais recommandé)
 RUN useradd -m appuser

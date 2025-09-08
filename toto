@@ -36,6 +36,15 @@ RUN cargo build --release --target x86_64-unknown-linux-musl
 
 # 🚀 Étape 3 : Image finale ultra-légère
 FROM alpine:latest
+LABEL maintainer="Mickael PATRON"
+LABEL org.opencontainers.image.authors="Mickael PATRON"
+LABEL org.opencontainers.image.url="https://github.com/mpatron/rust_server"
+LABEL org.opencontainers.image.documentation="https://github.com/mpatron/rust_server/README.md"
+LABEL org.opencontainers.image.source="https://github.com/mpatron/rust_server"
+LABEL org.opencontainers.image.version="1.0.0"
+LABEL org.opencontainers.image.revision="1.0.0"
+LABEL org.opencontainers.image.vendor="Mickael PATRON"
+LABEL org.opencontainers.image.licenses="MIT"
 
 # Crée un utilisateur non-root
 RUN adduser -D appuser
