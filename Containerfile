@@ -28,7 +28,7 @@ COPY --from=deps /usr/local/cargo /usr/local/cargo
 RUN cargo build --release
 
 # 🚀 Étape 3 : Image finale minimale
-FROM debian:buster-slim
+FROM debian:bookworm-slim
 LABEL maintainer="Mickael PATRON"
 LABEL org.opencontainers.image.authors="Mickael PATRON"
 LABEL org.opencontainers.image.url="https://github.com/mpatron/rust_server"
