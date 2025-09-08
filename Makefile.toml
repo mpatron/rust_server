@@ -26,7 +26,7 @@ dependencies = [
 
 [tasks.container]
 command = "podman"
-args = ["build", "-t", "rust-app", "-f", "Containerfile_deb"]
+args = ["build", "-t", "rust-app", "-f", "Containerfile_test2"]
 
 [tasks.container-run]
 command = "podman"

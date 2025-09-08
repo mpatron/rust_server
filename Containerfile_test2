@@ -1,0 +1,60 @@
+# 🦀 Étape 1 : Builder intermédiaire avec sccache et musl
+FROM rust:latest AS deps
+
+# Install sccache, musl tools, and build essentials
+RUN apt-get update && apt-get install -y \
+    musl-tools \
+    pkg-config \
+    curl \
+    build-essential \
+    && cargo install sccache \
+    && rustup target add x86_64-unknown-linux-musl
+
+ENV RUSTC_WRAPPER="sccache"
+ENV SCCACHE_DIR="/sccache"
+ENV CARGO_TARGET_DIR="/app/target"
+
+WORKDIR /app
+
+# Copie uniquement les fichiers de dépendances
+COPY Cargo.toml Cargo.lock ./
+
+# Faux fichier source pour télécharger les dépendances
+RUN mkdir src && echo "fn main() {}" > src/main.rs
+
+# Compile les dépendances pour musl
+RUN cargo build --release --target x86_64-unknown-linux-musl
+
+# 🧱 Étape 2 : Builder final avec cache
+FROM rust:latest AS builder
+
+RUN apt-get update && apt-get install -y musl-tools pkg-config curl build-essential \
+    && cargo install sccache \
+    && rustup target add x86_64-unknown-linux-musl
+
+ENV RUSTC_WRAPPER="sccache"
+ENV SCCACHE_DIR="/sccache"
+ENV CARGO_TARGET_DIR="/app/target"
+
+WORKDIR /app
+
+COPY . .
+
+# Copie le cache des dépendances
+COPY --from=deps /app/target /app/target
+COPY --from=deps /usr/local/cargo /usr/local/cargo
+
+# Compile le projet réel pour musl
+RUN cargo build --release --target x86_64-unknown-linux-musl
+
+# 🚀 Étape 3 : Image finale ultra-légère
+FROM alpine:latest
+
+RUN adduser -D appuser
+
+# Remplace `mon-projet` par le nom réel de ton binaire
+COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/rust_server /usr/local/bin/app
+
+USER appuser
+
+CMD ["app"]

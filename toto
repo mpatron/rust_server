@@ -1,0 +1,48 @@
+# 🦀 Étape 1 : Builder intermédiaire pour mettre en cache les dépendances
+FROM rust:latest AS deps
+
+# Installe musl et outils nécessaires
+RUN apt-get update && apt-get install -y musl-tools \
+    && rustup target add x86_64-unknown-linux-musl
+
+WORKDIR /app
+
+# Copie uniquement les fichiers de dépendances pour les mettre en cache
+COPY Cargo.toml Cargo.lock ./
+
+# Création d’un faux fichier source pour que `cargo build` télécharge les dépendances
+RUN mkdir src && echo "fn main() {}" > src/main.rs
+
+# Compilation des dépendances uniquement
+RUN cargo build --release --target x86_64-unknown-linux-musl
+
+# 🧱 Étape 2 : Builder final pour compiler le vrai projet
+FROM rust:latest AS builder
+
+RUN apt-get update && apt-get install -y musl-tools \
+    && rustup target add x86_64-unknown-linux-musl
+
+WORKDIR /app
+
+# Copie les fichiers du projet
+COPY . .
+
+# Copie le cache des dépendances depuis l'étape précédente
+COPY --from=deps /app/target /app/target
+COPY --from=deps /usr/local/cargo /usr/local/cargo
+
+# Compile le projet réel pour musl
+RUN cargo build --release --target x86_64-unknown-linux-musl
+
+# 🚀 Étape 3 : Image finale ultra-légère
+FROM alpine:latest
+
+# Crée un utilisateur non-root
+RUN adduser -D appuser
+
+# Remplace `mon-projet` par le nom réel de ton binaire
+COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/rust_server /usr/local/bin/app
+
+USER appuser
+
+CMD ["app"]
