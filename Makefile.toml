@@ -40,12 +40,12 @@ dependencies = ["container-run"]
 
 [tasks.container-alpine]
 command = "podman"
-args = ["build", "-t", "rust-app", "-f", "Containerfile_alpine"]
+args = ["build", "-t", "rust-app-alpine", "-f", "Containerfile_alpine"]
 
 [tasks.container-run-alpine]
 # podman run --publish 8888:8000 --rm -detach --replace --name rust-app rust-app
 command = "podman"
-args = ["run", "--publish", "8888:8000", "--rm", "--detach", "--replace", "--name", "rust-app", "rust-app"]
+args = ["run", "--publish", "8888:8000", "--rm", "--detach", "--replace", "--name", "rust-app", "rust-app-alpine"]
 dependencies = ["container-alpine"]
 
 [tasks.container-alpine-test]

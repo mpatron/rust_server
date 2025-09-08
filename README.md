@@ -14,7 +14,9 @@ podman exec -it rust-app /bin/sh
 # https://sagiegurari.github.io/cargo-make/
 # https://github.com/sagiegurari/cargo-make
 mpatron@mylinux:hello-rocket$ cargo install --no-default-features --force cargo-make
-mpatron@mylinux:hello-rocket$ cargo make my-flow
+mpatron@mylinux:hello-rocket$ cargo make cargo make container-test # Taille de ~82 MB l'image
+# Ou
+mpatron@mylinux:hello-rocket$ cargo make container-alpine-test # Taille de ~12 MB l'image
 ~~~
 
 ## Make
@@ -34,7 +36,7 @@ cargo test --test api_tests
 podman run -it --publish 8888:8000 --rm --replace --name rust-app rust-app
 ~~~
 
-Clean podman
+## Clean podman
 
 ~~~bash
 #Install podman
