@@ -1,7 +1,9 @@
 use axum::{Router, routing::get};
 use tracing::info;
+use rust_server::apiresponse::{ApiResponse, ApiError};
 
-async fn hello_world() -> &'static str {
+
+async fn hello_world() -> Result<ApiResponse, ApiError> {
     info!("Running hello_world({})","Hello, World! 🤣");
     "Hello, World! 🤣"
 }
