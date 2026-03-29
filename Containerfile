@@ -1,34 +1,22 @@
-# 🦀 Étape 1 : Builder intermédiaire pour mettre en cache les dépendances
-FROM rust:latest AS deps
+# ---- Builder ----
+FROM rust:1.94-alpine AS builder
+RUN apk add --no-cache musl-dev build-base upx
+WORKDIR /src
 
-WORKDIR /app
-
-# Copie uniquement les fichiers de dépendances pour les mettre en cache
+# (Optionnel mais conseillé) cache deps
 COPY Cargo.toml Cargo.lock ./
+RUN mkdir -p src && echo "fn main(){}" > src/main.rs
+RUN cargo build --release --target x86_64-unknown-linux-musl || true
 
-# Création d’un faux fichier source pour que `cargo build` télécharge les dépendances
-RUN mkdir src && echo "fn main() {}" > src/main.rs
-
-# Compilation des dépendances uniquement
-RUN cargo build --release
-
-# 🧱 Étape 2 : Builder final pour compiler le vrai projet
-FROM rust:latest AS builder
-
-WORKDIR /app
-
-# Copie les fichiers du projet
+# Build réel
 COPY . .
+RUN cargo build --release --target x86_64-unknown-linux-musl
+# Strip pour réduire (UPX optionnel, attention compat)
+RUN strip target/x86_64-unknown-linux-musl/release/rust_server
 
-# Copie le cache des dépendances depuis l'étape précédente
-COPY --from=deps /app/target /app/target
-COPY --from=deps /usr/local/cargo /usr/local/cargo
+# ---- Runtime ----
+FROM scratch
 
-# Compilation du projet réel
-RUN cargo build --release
-
-# 🚀 Étape 3 : Image finale minimale
-FROM debian:bookworm-slim
 LABEL maintainer="Mickael PATRON"
 LABEL org.opencontainers.image.authors="Mickael PATRON"
 LABEL org.opencontainers.image.url="https://github.com/mpatron/rust_server"
@@ -39,12 +27,13 @@ LABEL org.opencontainers.image.revision="1.0.0"
 LABEL org.opencontainers.image.vendor="Mickael PATRON"
 LABEL org.opencontainers.image.licenses="MIT"
 
-# Création d’un utilisateur non-root (optionnel mais recommandé)
-RUN useradd -m appuser
+# Si HTTPS/TLS : copier les CA (depuis alpine)
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
-# Remplace `mon-projet` par le nom réel de ton binaire
-COPY --from=builder /app/target/release/rust_server /usr/local/bin/app
+# Copier le binaire
+COPY --from=builder /src/target/x86_64-unknown-linux-musl/release/rust_server /rust_server
 
-USER appuser
-
-CMD ["app"]
+# Important : scratch n’a pas /tmp ; si ton app en a besoin :
+# WORKDIR / (ou prévoir un volume côté K8s)
+USER 65532:65532
+ENTRYPOINT ["/rust_server"]
