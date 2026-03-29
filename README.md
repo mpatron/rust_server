@@ -1,11 +1,13 @@
 # Construction de l'image docker avec podman
 
 ~~~bash
-podman build -t rust-app .
+podman build --build-arg VERSION="$(git describe --tags --abbrev=0)" -t rust-app .
 # podman run --publish 8000 --network host --rm --detach --replace --name rust-app rust-app
-podman run --publish 8888:8000 --rm --detach --replace --name rust-app rust-app
+podman run --env APP_VERSION="$(git describe --tags --abbrev=0)" --publish 8888:8000 --rm --detach --replace --name rust-app rust-app
+podman logs rust-app #Voir la version et autre
 curl http://127.0.0.1:8888/
-podman exec -it rust-app /bin/sh
+podman exec --interactive --tty rust-app /bin/sh # Erreur car il n'y rien, pas de shell.
+docker export rust-app | tar -tv # Voir qu'il n'y a rien d'autre que le binaire rust_server
 ~~~
 
 ## Builder

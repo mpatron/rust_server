@@ -1,5 +1,7 @@
 # ---- Builder ----
 FROM rust:1.94-alpine AS builder
+ARG VERSION
+ENV APP_VERSION=${VERSION}
 RUN apk add --no-cache musl-dev build-base upx
 WORKDIR /src
 
@@ -17,13 +19,15 @@ RUN strip target/x86_64-unknown-linux-musl/release/rust_server
 # ---- Runtime ----
 FROM scratch
 
+ARG VERSION
+
 LABEL maintainer="Mickael PATRON"
 LABEL org.opencontainers.image.authors="Mickael PATRON"
 LABEL org.opencontainers.image.url="https://github.com/mpatron/rust_server"
 LABEL org.opencontainers.image.documentation="https://github.com/mpatron/rust_server/README.md"
 LABEL org.opencontainers.image.source="https://github.com/mpatron/rust_server"
-LABEL org.opencontainers.image.version="1.0.0"
-LABEL org.opencontainers.image.revision="1.0.0"
+LABEL org.opencontainers.image.version="${VERSION}"
+LABEL org.opencontainers.image.revision="${VERSION}"
 LABEL org.opencontainers.image.vendor="Mickael PATRON"
 LABEL org.opencontainers.image.licenses="MIT"
 

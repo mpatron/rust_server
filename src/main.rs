@@ -1,12 +1,18 @@
 use axum_server::Server;
 use rust_server::app;
-use std::net::SocketAddr; // Import the app from lib.rs
+use std::env;
+use std::net::SocketAddr;
 use tracing::info;
 use tracing_subscriber;
 
-
 #[tokio::main]
 async fn main() {
+    let version = "APP_VERSION";
+    match env::var(version) {
+        Ok(val) => println!("{version}: {val:?}"),
+        Err(e) => println!("La varible {version} est vide: {e}"),
+    }
+
     tracing_subscriber::fmt::init();
 
     info!("Starting server...");
