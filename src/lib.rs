@@ -1,15 +1,20 @@
-use axum::{Router, routing::get};
+use axum::{Router, response::IntoResponse, routing::get};
 use tracing::info;
 // use apiresponse::{ApiResponse, ApiError};
 
-
 async fn hello_world() -> &'static str {
-    info!("Running hello_world({})","Hello, World! 🤣");
+    info!("Running hello_world({})", "Hello, World! 🤣");
     "Hello, World! 🤣"
 }
 
+async fn health_check() -> impl IntoResponse {
+    "✅ Healthy"
+}
+
 pub fn app() -> Router {
-    Router::new().route("/", get(hello_world))
+    Router::new()
+        .route("/", get(hello_world))
+        .route("/health", get(health_check))
 }
 
 #[cfg(test)]

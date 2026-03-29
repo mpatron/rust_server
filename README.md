@@ -6,6 +6,7 @@ podman build --build-arg VERSION="$(git describe --tags --abbrev=0)" -t rust-app
 podman run --env APP_VERSION="$(git describe --tags --abbrev=0)" --publish 8888:8000 --rm --detach --replace --name rust-app rust-app
 podman logs rust-app #Voir la version et autre
 curl http://127.0.0.1:8888/
+curl http://127.0.0.1:8888/health
 podman exec --interactive --tty rust-app /bin/sh # Erreur car il n'y rien, pas de shell.
 docker export rust-app | tar -tv # Voir qu'il n'y a rien d'autre que le binaire rust_server
 ~~~
@@ -15,10 +16,10 @@ docker export rust-app | tar -tv # Voir qu'il n'y a rien d'autre que le binaire 
 ~~~bash
 # https://sagiegurari.github.io/cargo-make/
 # https://github.com/sagiegurari/cargo-make
-mpatron@mylinux:hello-rocket$ cargo install --no-default-features --force cargo-make
-mpatron@mylinux:hello-rocket$ cargo make cargo make container-test # Taille de ~82 MB l'image
+cargo install --no-default-features --force cargo-make
+cargo make cargo make container-test # Taille de ~82 MB l'image
 # Ou
-mpatron@mylinux:hello-rocket$ cargo make container-alpine-test # Taille de ~12 MB l'image
+cargo make container-alpine-test # Taille de ~12 MB l'image
 ~~~
 
 ## Make
@@ -27,6 +28,7 @@ mpatron@mylinux:hello-rocket$ cargo make container-alpine-test # Taille de ~12 M
 cargo install --force cargo-make
 cargo make
 cargo make container-test
+cargo make format
 ~~~
 
 ## Test
