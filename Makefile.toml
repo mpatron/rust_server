@@ -10,7 +10,7 @@ args = ["clean"]
 [tasks.build]
 command = "cargo"
 args = ["build"]
-dependencies = ["clean"]
+dependencies = ["format"]
 
 [tasks.test]
 command = "cargo"
