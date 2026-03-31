@@ -4,9 +4,9 @@ use axum::Router;
 use rust_server::{hello::hello_routers, upload::upload_routers};
 use std::env;
 use std::net::SocketAddr;
+use tokio::net::TcpListener;
 use tracing::info;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
-use tokio::net::TcpListener;
 
 fn init_logs() {
     tracing_subscriber::registry()
@@ -25,9 +25,7 @@ async fn main() {
     }
 
     info!("🚀 Server starting...");
-    let app = Router::new()
-        .merge(hello_routers())
-        .merge(upload_routers());
+    let app = Router::new().merge(hello_routers()).merge(upload_routers());
     let addr = SocketAddr::from(([0, 0, 0, 0], 8000));
     info!("🧱 Listening on {}", addr);
     let listener = TcpListener::bind(addr).await.unwrap();
