@@ -1,7 +1,7 @@
 use axum::http::StatusCode;
 use axum_server::Server;
 use reqwest::Client;
-use rust_server::app;
+use rust_server::hello::hello_routers;
 use std::net::SocketAddr; // Import the app from lib.rs
 use tracing::info;
 
@@ -10,7 +10,7 @@ async fn test_hello_world_integration() {
     info!("Running test intégration test_hello_world_integration");
 
     // Set up the app
-    let app = app();
+    let app = hello_routers();
 
     // Start the server in a background task
     let addr = SocketAddr::from(([0, 0, 0, 0], 8000));

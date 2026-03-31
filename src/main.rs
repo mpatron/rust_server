@@ -1,10 +1,11 @@
-use axum_server::Server;
-use rust_server::app;
+mod hello;
+
+use axum::Router;
+use rust_server::hello::hello_routers;
 use std::env;
 use std::net::SocketAddr;
 use tracing::info;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
-// https://oneuptime.com/blog/post/2026-02-06-opentelemetry-tracing-rust-tracing-crate/view
 
 fn init_logs() {
     tracing_subscriber::registry()
@@ -23,16 +24,13 @@ async fn main() {
     }
 
     info!("🚀 Server starting...");
-
-    let app = app();
+    let app = Router::new()
+        .merge(hello_routers())
+        .merge(rust_server::upload::upload_routers());
     let addr = SocketAddr::from(([0, 0, 0, 0], 8000));
-
     info!("🧱 Listening on {}", addr);
-    Server::bind(addr)
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
-
+    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
+    axum::serve(listener, app).await.unwrap();
     info!("🦀 Server stopped");
 }
 

@@ -1,27 +1,16 @@
 use axum::{
-    extract::{Multipart, Path},
+    Router,
+    extract::Multipart,
     response::Html,
     routing::{get, post},
-    Router,
 };
 use std::fs::File;
 use std::io::Write;
-use std::net::SocketAddr;
 
-#[tokio::main]
-async fn main() {
-    // Define routes
-    let app = Router::new()
-        .route("/", get(upload_form))
-        .route("/upload", post(upload_file));
-
-    // Start the server
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
-    println!("Server running at http://{}", addr);
-    axum::Server::bind(&addr)
-        .serve(app.into_make_service())
-        .await
-        .unwrap();
+pub fn upload_routers() -> Router {
+    Router::new()
+        .route("/uploadform", get(upload_form))
+        .route("/upload", post(upload_file))
 }
 
 // Serve a simple HTML form for file upload
