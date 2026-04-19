@@ -1,0 +1,66 @@
+// src/main.rs - Axum application
+use axum::{
+    extract::Path,
+    http::StatusCode,
+    routing::get,
+    Json, Router,
+};
+use serde::Serialize;
+use std::net::SocketAddr;
+use tower_http::cors::CorsLayer;
+use tower_http::trace::TraceLayer;
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+
+#[derive(Serialize)]
+struct Message {
+    message: String,
+}
+
+#[derive(Serialize)]
+struct Health {
+    status: String,
+}
+
+#[tokio::main]
+async fn main() {
+    // Initialize structured logging
+    tracing_subscriber::registry()
+        .with(tracing_subscriber::EnvFilter::try_from_default_env()
+            .unwrap_or_else(|_| "my_axum_app=info,tower_http=info".into()))
+        .with(tracing_subscriber::fmt::layer())
+        .init();
+    tracing::info!("🚀 Server starting...");
+    let app = Router::new()
+        .route("/", get(root))
+        .route("/health", get(health))
+        .route("/api/v1/users/{id}", get(get_user))
+        .layer(CorsLayer::permissive())
+        .layer(TraceLayer::new_for_http());
+
+    let port: u16 = std::env::var("PORT")
+        .unwrap_or_else(|_| "8080".to_string())
+        .parse()
+        .expect("PORT must be a valid number");
+
+    let addr = SocketAddr::from(([0, 0, 0, 0], port));
+    tracing::info!("Listening on {}", addr);
+
+    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
+    axum::serve(listener, app).await.unwrap();
+}
+
+async fn root() -> Json<Message> {
+    Json(Message {
+        message: "Hello from Axum!".to_string(),
+    })
+}
+
+async fn health() -> Json<Health> {
+    Json(Health {
+        status: "ok".to_string(),
+    })
+}
+
+async fn get_user(Path(id): Path<String>) -> Json<serde_json::Value> {
+    Json(serde_json::json!({ "id": id }))
+}
