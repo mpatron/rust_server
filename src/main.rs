@@ -1,7 +1,6 @@
 mod hello;
 mod upload;
-use axum::{Json, Router, extract::ConnectInfo, routing::{get, post}, http::StatusCode, body::Body};
-use axum::http::Request;
+use axum::{Json, Router, extract::ConnectInfo, routing::{get, post}};
 use tower_http::trace::TraceLayer;
 use std::env;
 use std::net::SocketAddr;
@@ -60,10 +59,11 @@ fn app_default() -> Router {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use axum::{body::Body, http::{Request, StatusCode}};
+    use axum::{body::Body, http::{self, Request, StatusCode}};
     use http_body_util::BodyExt;
     use tower::ServiceExt;
     use tracing::info;
+    use serde_json::{json, Value};
 
     #[tokio::test]
     async fn test_main() {
@@ -72,19 +72,25 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn hello_world() {
+    async fn json_app_default() {
         let app = app_default();
 
-        // `Router` implements `tower::Service<Request<Body>>` so we can
-        // call it like any tower service, no need to run an HTTP server.
         let response = app
-            .oneshot(Request::get("/").body(Body::empty()).unwrap())
+            .oneshot(
+                Request::post("/json")
+                    .header(http::header::CONTENT_TYPE, mime::APPLICATION_JSON.as_ref())
+                    .body(Body::from(
+                        serde_json::to_vec(&json!([1, 2, 3, 4])).unwrap(),
+                    ))
+                    .unwrap(),
+            )
             .await
             .unwrap();
 
         assert_eq!(response.status(), StatusCode::OK);
 
         let body = response.into_body().collect().await.unwrap().to_bytes();
-        assert_eq!(&body[..], b"Hello, World!");
+        let body: Value = serde_json::from_slice(&body).unwrap();
+        assert_eq!(body, json!({ "data": [1, 2, 3, 4] }));
     }
 }
