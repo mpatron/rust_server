@@ -1,9 +1,13 @@
 # Axum testouilles
 
-- [https://oneuptime.com/blog/post/2026-02-06-opentelemetry-tracing-rust-tracing-crate/view](https://oneuptime.com/blog/post/2026-02-06-opentelemetry-tracing-rust-tracing-crate/view)
-- [https://www.shuttle.dev/blog/2023/12/06/using-axum-rust](https://www.shuttle.dev/blog/2023/12/06/using-axum-rust)
-- [https://oneuptime.com/blog/post/2026-02-08-how-to-containerize-an-axum-rust-application-with-docker/view](https://oneuptime.com/blog/post/2026-02-08-how-to-containerize-an-axum-rust-application-with-docker/view)
-- [https://github.com/jrollin/oodini](https://github.com/jrollin/oodini)
+- Opentelemetry [https://oneuptime.com/blog/post/2026-02-06-opentelemetry-tracing-rust-tracing-crate/view](https://oneuptime.com/blog/post/2026-02-06-opentelemetry-tracing-rust-tracing-crate/view)
+- Bof [https://www.shuttle.dev/blog/2023/12/06/using-axum-rust](https://www.shuttle.dev/blog/2023/12/06/using-axum-rust)
+- Bon tutorial [https://oneuptime.com/blog/post/2026-02-08-how-to-containerize-an-axum-rust-application-with-docker/view](https://oneuptime.com/blog/post/2026-02-08-how-to-containerize-an-axum-rust-application-with-docker/view)
+- Bon tutorial [https://github.com/jrollin/oodini](https://github.com/jrollin/oodini)
+- Explication des tests unitaires [https://www.ruststepbystep.com/how-to-test-axum-apis-unit-and-integration-testing-guide/](https://www.ruststepbystep.com/how-to-test-axum-apis-unit-and-integration-testing-guide/)
+- Complilation par pseudo-make [https://sagiegurari.github.io/cargo-make/](https://sagiegurari.github.io/cargo-make/)
+- Complilation par pseudo-make [https://github.com/sagiegurari/cargo-make](https://github.com/sagiegurari/cargo-make)
+
 
 ## Construction de l'image docker avec podman
 
@@ -21,8 +25,6 @@ docker export rust-app | tar -tv # Voir qu'il n'y a rien d'autre que le binaire 
 ## Builder
 
 ~~~bash
-# https://sagiegurari.github.io/cargo-make/
-# https://github.com/sagiegurari/cargo-make
 cargo install --no-default-features --force cargo-make
 cargo make cargo make container-test # Taille de ~82 MB l'image
 # Ou
@@ -39,8 +41,6 @@ cargo make format
 ~~~
 
 ## Test
-
-[https://www.ruststepbystep.com/how-to-test-axum-apis-unit-and-integration-testing-guide/](https://www.ruststepbystep.com/how-to-test-axum-apis-unit-and-integration-testing-guide/)
 
 ~~~bash
 cargo test --test api_tests
