@@ -3,6 +3,7 @@
 - [https://oneuptime.com/blog/post/2026-02-06-opentelemetry-tracing-rust-tracing-crate/view](https://oneuptime.com/blog/post/2026-02-06-opentelemetry-tracing-rust-tracing-crate/view)
 - [https://www.shuttle.dev/blog/2023/12/06/using-axum-rust](https://www.shuttle.dev/blog/2023/12/06/using-axum-rust)
 - [https://oneuptime.com/blog/post/2026-02-08-how-to-containerize-an-axum-rust-application-with-docker/view](https://oneuptime.com/blog/post/2026-02-08-how-to-containerize-an-axum-rust-application-with-docker/view)
+- [https://github.com/jrollin/oodini](https://github.com/jrollin/oodini)
 
 ## Construction de l'image docker avec podman
 

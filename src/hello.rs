@@ -8,6 +8,7 @@ async fn hello_world() -> &'static str {
 }
 
 async fn health_check() -> impl IntoResponse {
+    info!("✅ Running health_check");
     "✅ Healthy"
 }
 
