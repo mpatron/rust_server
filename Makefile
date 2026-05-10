@@ -19,7 +19,7 @@ BUILDSTAMP_FILE := .podman-build-flag
 all: $(BUILDSTAMP_FILE)
 
 # Dépend de tous les fichiers sources pour redéclencher le build si un fichier change
-$(BUILDSTAMP_FILE): Containerfile src/*.rs Cargo.toml
+$(BUILDSTAMP_FILE): Containerfile src/*.rs tests/*.rs Cargo.toml
 	@echo "🔨 Build image: $(IMAGE_NAME) version: $(FULL_TAG)"
 	podman build -f Containerfile --tag jobjects/$(IMAGE_NAME):$(FULL_TAG) .
 	podman tag jobjects/$(IMAGE_NAME):$(FULL_TAG) jobjects/$(IMAGE_NAME):latest
