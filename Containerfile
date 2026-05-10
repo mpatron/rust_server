@@ -12,7 +12,7 @@ RUN cargo build --release --target x86_64-unknown-linux-musl || true
 
 # Build réel
 COPY . .
-RUN cargo test --release
+RUN cargo test --release --target x86_64-unknown-linux-musl
 RUN cargo build --release --target x86_64-unknown-linux-musl
 # Strip pour réduire (UPX optionnel, attention compat)
 RUN strip target/x86_64-unknown-linux-musl/release/rust_server

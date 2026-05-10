@@ -2,62 +2,50 @@
 #        CONFIGURATION
 # ============================
 
-VERSION        := $(shell git describe --tags --abbrev=0)
+VERSION        := $(shell git describe --tags --abbrev=0 2>/dev/null || echo "0.1.0")
 DOCKER_TAG     := $(shell date +%Y%m%d)
-IMAGES         := rust-app
+IMAGE_NAME     := rust-app
+FULL_TAG       := $(VERSION)-$(DOCKER_TAG)
 
+# Le fichier flag est maintenant à la racine
 BUILDSTAMP_FILE := .podman-build-flag
-BUILDSTAMPS     := $(addsuffix /$(BUILDSTAMP_FILE),$(IMAGES))
 
 # ============================
 #          TARGETS
 # ============================
 
-.PHONY: all clean compile release install
+.PHONY: all clean compile release install run stop
 
-all: $(BUILDSTAMPS)
+all: $(BUILDSTAMP_FILE)
 
-# Chaque buildstamp dépend de tous les fichiers du dossier (sauf lui-même)
-%/$(BUILDSTAMP_FILE): $(filter-out %/$(BUILDSTAMP_FILE),$(wildcard %/*))
-	$(call docker_build,$(@D))
+# Dépend de tous les fichiers sources pour redéclencher le build si un fichier change
+$(BUILDSTAMP_FILE): Containerfile src/*.rs Cargo.toml
+	@echo "🔨 Build image: $(IMAGE_NAME) version: $(FULL_TAG)"
+	podman build -f Containerfile --tag jobjects/$(IMAGE_NAME):$(FULL_TAG) .
+	podman tag jobjects/$(IMAGE_NAME):$(FULL_TAG) jobjects/$(IMAGE_NAME):latest
+	podman tag jobjects/$(IMAGE_NAME):$(FULL_TAG) jobjects/$(IMAGE_NAME):$(VERSION)
 	touch $@
-
-clean:
-	$(foreach img,$(IMAGES),$(call docker_clean,$(img));)
-	rm -f $(BUILDSTAMPS)
 
 compile: all
 
+run:
+	@echo "🏃 Running container: $(IMAGE_NAME)"
+	podman run --detach --name $(IMAGE_NAME) --rm -p 8080:8080 jobjects/$(IMAGE_NAME):latest
+
+stop:
+	@echo "🛑 Stopping container: $(IMAGE_NAME)"
+	podman stop $(IMAGE_NAME) || true
+	podman rm $(IMAGE_NAME) || true
+
+clean:
+	@echo "🧹 Cleaning image and flags"
+	podman rmi --force jobjects/$(IMAGE_NAME):$(FULL_TAG) 2>/dev/null || true
+	podman rmi --force jobjects/$(IMAGE_NAME):latest 2>/dev/null || true
+	rm -f $(BUILDSTAMP_FILE)
+
 release:
-	$(foreach img,$(IMAGES),$(call docker_release,$(img));)
-
-install:
-	@echo "Installation non implémentée"
-	# podman run --detach --name rust-app jobjects/rust-app:${VERSION}-$(DOCKER_TAG)
-
-# ============================
-#        COMMAND TEMPLATES
-# ============================
-
-define docker_build
-	@echo "🔨 Build image: $(1)  version: ${VERSION}-$(DOCKER_TAG)"
-	@podman build --tag jobjects/$(1):${VERSION}-$(DOCKER_TAG) $(1)
-	@podman tag jobjects/$(1):${VERSION}-$(DOCKER_TAG) jobjects/$(1):latest
-	@podman tag jobjects/$(1):${VERSION}-$(DOCKER_TAG) jobjects/$(1):${VERSION}
-endef
-
-define docker_release
-	@echo "🚀 Release image: $(1) version: ${VERSION}"
-	@podman build --tag jobjects/$(1):${VERSION} $(1)
-	@podman tag jobjects/$(1):${VERSION} docker.io/mpatron/$(1):${VERSION}
-	@podman tag jobjects/$(1):${VERSION} docker.io/mpatron/$(1):latest
-	@podman push docker.io/mpatron/$(1):${VERSION}
-	@podman push docker.io/mpatron/$(1):latest
-endef
-
-define docker_clean
-	@echo "🧹 Clean image: $(1)"
-	@podman rmi --force --ignore jobjects/$(1):${VERSION}-$(DOCKER_TAG)
-	@podman rmi --force --ignore jobjects/$(1):latest
-	@podman rmi --force --ignore jobjects/$(1):${VERSION}
-endef
+	@echo "🚀 Release image: $(IMAGE_NAME) version: $(VERSION)"
+	podman tag jobjects/$(IMAGE_NAME):latest docker.io/mpatron/$(IMAGE_NAME):$(VERSION)
+	podman tag jobjects/$(IMAGE_NAME):latest docker.io/mpatron/$(IMAGE_NAME):latest
+	podman push docker.io/mpatron/$(IMAGE_NAME):$(VERSION)
+	podman push docker.io/mpatron/$(IMAGE_NAME):latest
