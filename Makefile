@@ -31,6 +31,7 @@ compile: all
 run:
 	@echo "🏃 Running container: $(IMAGE_NAME)"
 	podman run --detach --name $(IMAGE_NAME) --rm -p 8000:8000 jobjects/$(IMAGE_NAME):latest
+	echo "curl -v http://127.0.0.1:8000 && echo"
 
 stop:
 	@echo "🛑 Stopping container: $(IMAGE_NAME)"

@@ -8,7 +8,6 @@
 - Complilation par pseudo-make [https://sagiegurari.github.io/cargo-make/](https://sagiegurari.github.io/cargo-make/)
 - Complilation par pseudo-make [https://github.com/sagiegurari/cargo-make](https://github.com/sagiegurari/cargo-make)
 
-
 ## Construction de l'image docker avec podman
 
 ~~~bash
@@ -59,4 +58,5 @@ podman image prune --all --force
 podman container prune --force
 podman volume prune --force
 podman network prune --force
+podman system prune --all --volumes --build 
 ~~~
