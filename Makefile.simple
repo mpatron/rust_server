@@ -1,0 +1,31 @@
+# Variables demandées
+VERSION        := $(shell git describe --tags --abbrev=0 2>/dev/null || echo "0.1.0")
+DOCKER_TAG     := $(shell date +%Y%m%d)
+IMAGE_NAME     := rust-app
+FULL_TAG       := $(VERSION)-$(DOCKER_TAG)
+
+# Moteur de conteneur (Podman par défaut)
+CONTAINER_ENGINE := podman
+
+# Cibles
+.PHONY: all build clean run help
+
+all: build ## Construit l'image par défaut
+
+build: ## Construit l'image avec les tags latest et FULL_TAG
+	@echo "--- Construction de l'image Rust : $(IMAGE_NAME):$(FULL_TAG) ---"
+	$(CONTAINER_ENGINE) build \
+		-t $(IMAGE_NAME):latest \
+		-t $(IMAGE_NAME):$(FULL_TAG) \
+		-f Containerfile .
+
+run: ## Lance le conteneur en mode interactif
+	@echo "--- Lancement du conteneur ---"
+	$(CONTAINER_ENGINE) run --rm -it $(IMAGE_NAME):latest
+
+clean: ## Supprime les images créées
+	@echo "--- Nettoyage des images ---"
+	$(CONTAINER_ENGINE) rmi $(IMAGE_NAME):latest $(IMAGE_NAME):$(FULL_TAG) || true
+
+help: ## Affiche cette aide
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
