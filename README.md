@@ -15,7 +15,7 @@
 podman build --build-arg VERSION="$(git describe --tags --abbrev=0)" -t rust-app .
 # podman run --publish 8000 --network host --rm --detach --replace --name rust-app rust-app
 podman run --env APP_VERSION="$(git describe --tags --abbrev=0)" --publish 8888:8000 --rm --detach --replace --name rust-app rust-app
-podman logs rust-app #Voir la version et autre
+podman logs rust-app --follow #Voir la version et autre
 curl http://127.0.0.1:8888/
 curl http://127.0.0.1:8888/health
 podman exec --interactive --tty rust-app /bin/sh # Erreur car il n'y rien, pas de shell.

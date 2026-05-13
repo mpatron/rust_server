@@ -30,7 +30,7 @@ compile: all
 
 run:
 	@echo "🏃 Running container: $(IMAGE_NAME)"
-	podman run --detach --name $(IMAGE_NAME) --rm -p 8080:8080 jobjects/$(IMAGE_NAME):latest
+	podman run --detach --name $(IMAGE_NAME) --rm -p 8000:8000 jobjects/$(IMAGE_NAME):latest
 
 stop:
 	@echo "🛑 Stopping container: $(IMAGE_NAME)"
