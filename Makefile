@@ -7,46 +7,43 @@ DOCKER_TAG     := $(shell date +%Y%m%d)
 IMAGE_NAME     := rust-app
 FULL_TAG       := $(VERSION)-$(DOCKER_TAG)
 
-# Le fichier flag est maintenant à la racine
-BUILDSTAMP_FILE := .podman-build-flag
+# Moteur de conteneur (Podman par défaut)
+CONTAINER_ENGINE := podman
 
 # ============================
 #          TARGETS
 # ============================
+.PHONY: all build clean run stop help release
 
-.PHONY: all clean compile release install run stop
+all: build ## Construit l'image par défaut
 
-all: $(BUILDSTAMP_FILE)
+build: ## Construit l'image avec les tags latest et FULL_TAG
+	@echo "--- 🔨 Construction de l'image Rust : $(IMAGE_NAME):$(FULL_TAG) ---"
+	$(CONTAINER_ENGINE) build \
+		--tag $(IMAGE_NAME):latest \
+		--tag $(IMAGE_NAME):$(FULL_TAG) \
+		--file Containerfile .
 
-# Dépend de tous les fichiers sources pour redéclencher le build si un fichier change
-$(BUILDSTAMP_FILE): Containerfile src/*.rs tests/*.rs Cargo.toml
-	@echo "🔨 Build image: $(IMAGE_NAME) version: $(FULL_TAG)"
-	podman build -f Containerfile --tag jobjects/$(IMAGE_NAME):$(FULL_TAG) .
-	podman tag jobjects/$(IMAGE_NAME):$(FULL_TAG) jobjects/$(IMAGE_NAME):latest
-	podman tag jobjects/$(IMAGE_NAME):$(FULL_TAG) jobjects/$(IMAGE_NAME):$(VERSION)
-	touch $@
-
-compile: all
-
-run:
-	@echo "🏃 Running container: $(IMAGE_NAME)"
-	podman run --detach --name $(IMAGE_NAME) --rm -p 8000:8000 jobjects/$(IMAGE_NAME):latest
+run: ## Lance le conteneur en mode interactif
+	@echo "--- 🏃 Lancement du conteneur $(IMAGE_NAME):latest ---"
+	$(CONTAINER_ENGINE) run --detach --name $(IMAGE_NAME) --rm -p 8000:8000 $(IMAGE_NAME):latest
 	echo "curl -v http://127.0.0.1:8000 && echo"
 
-stop:
-	@echo "🛑 Stopping container: $(IMAGE_NAME)"
-	podman stop $(IMAGE_NAME) || true
-	podman rm $(IMAGE_NAME) || true
+stop: ## Arrête le conteneur
+	@echo "--- 🛑 Arrêt du conteneur $(IMAGE_NAME):latest ---"
+	$(CONTAINER_ENGINE) stop $(IMAGE_NAME) || true
+	$(CONTAINER_ENGINE) rm $(IMAGE_NAME) || true
 
-clean:
-	@echo "🧹 Cleaning image and flags"
-	podman rmi --force jobjects/$(IMAGE_NAME):$(FULL_TAG) 2>/dev/null || true
-	podman rmi --force jobjects/$(IMAGE_NAME):latest 2>/dev/null || true
-	rm -f $(BUILDSTAMP_FILE)
+clean: ## Supprime les images créées
+	@echo "--- 🧹 Nettoyage des images ---"
+	$(CONTAINER_ENGINE) rmi $(IMAGE_NAME):latest $(IMAGE_NAME):$(FULL_TAG) || true
 
-release:
+release: ## Tag et pousse l'image vers Docker Hub
 	@echo "🚀 Release image: $(IMAGE_NAME) version: $(VERSION)"
-	podman tag jobjects/$(IMAGE_NAME):latest docker.io/mpatron/$(IMAGE_NAME):$(VERSION)
-	podman tag jobjects/$(IMAGE_NAME):latest docker.io/mpatron/$(IMAGE_NAME):latest
-	podman push docker.io/mpatron/$(IMAGE_NAME):$(VERSION)
-	podman push docker.io/mpatron/$(IMAGE_NAME):latest
+	$(CONTAINER_ENGINE) tag $(IMAGE_NAME):latest docker.io/mpatron/$(IMAGE_NAME):$(VERSION)
+	$(CONTAINER_ENGINE) tag $(IMAGE_NAME):latest docker.io/mpatron/$(IMAGE_NAME):latest
+	$(CONTAINER_ENGINE) push docker.io/mpatron/$(IMAGE_NAME):$(VERSION)
+	$(CONTAINER_ENGINE) push docker.io/mpatron/$(IMAGE_NAME):latest
+
+help: ## Affiche cette aide
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
