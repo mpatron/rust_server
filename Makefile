@@ -26,8 +26,8 @@ build: ## Construit l'image avec les tags latest et FULL_TAG
 
 run: ## Lance le conteneur en mode interactif
 	@echo "--- 🏃 Lancement du conteneur $(IMAGE_NAME):latest ---"
-	$(CONTAINER_ENGINE) run --detach --name $(IMAGE_NAME) --rm -p 8000:8000 $(IMAGE_NAME):latest
-	echo "curl -v http://127.0.0.1:8000 && echo"
+	$(CONTAINER_ENGINE) run --detach --name $(IMAGE_NAME) --rm -p 8080:8080 $(IMAGE_NAME):latest
+	echo "curl -v http://127.0.0.1:8080 && echo"
 
 stop: ## Arrête le conteneur
 	@echo "--- 🛑 Arrêt du conteneur $(IMAGE_NAME):latest ---"
