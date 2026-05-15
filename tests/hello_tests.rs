@@ -1,5 +1,5 @@
-use rust_server::hello::hello;
 use log::info;
+use rust_server::hello::hello;
 
 #[test]
 fn test_hello_world_integration() {

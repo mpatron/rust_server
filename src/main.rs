@@ -1,4 +1,4 @@
-use actix_web::{get, post, web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{App, HttpResponse, HttpServer, Responder, get, post, web};
 use rust_server::hello::hello;
 
 #[get("/")]
@@ -30,7 +30,7 @@ async fn main() -> std::io::Result<()> {
 
 #[cfg(test)]
 mod tests {
-    use actix_web::{http::header::ContentType, test, App};
+    use actix_web::{App, http::header::ContentType, test};
 
     use super::*;
 
