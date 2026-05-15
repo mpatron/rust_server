@@ -4,7 +4,10 @@ version = "0.1.0"
 edition = '2024'
 
 [dependencies]
-actix-web = "4.13.0"
-log = "0.4.29"
+actix-cors = "0.7.1"
+actix-web = "4"
+chrono = "0.4"
+log = "0.4"
+serde_json = "1"
 
 

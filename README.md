@@ -8,6 +8,7 @@
 - Complilation par pseudo-make [https://sagiegurari.github.io/cargo-make/](https://sagiegurari.github.io/cargo-make/)
 - Complilation par pseudo-make [https://github.com/sagiegurari/cargo-make](https://github.com/sagiegurari/cargo-make)
 - Actix [https://github.com/actix/examples](https://github.com/actix/examples)
+- [https://oneuptime.com/blog/post/2026-02-01-rust-actix-web-rest-api/view](https://oneuptime.com/blog/post/2026-02-01-rust-actix-web-rest-api/view)
 
 ## Construction de l'image docker avec podman
 
