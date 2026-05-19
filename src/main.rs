@@ -1,6 +1,8 @@
 use actix_cors::Cors;
 use actix_web::{App, HttpResponse, HttpServer, Responder, get, middleware::Logger, post, web};
 use rust_server::hello::hello;
+use env_logger::Env;
+
 
 // Health check endpoint - useful for load balancers and monitoring
 #[get("/health")]
@@ -27,6 +29,8 @@ async fn manual_hello() -> impl Responder {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    env_logger::init_from_env(Env::default().default_filter_or("info"));
+
     HttpServer::new(|| {
         // Configure CORS - adjust these settings for your needs
         let cors = Cors::default()
@@ -38,12 +42,14 @@ async fn main() -> std::io::Result<()> {
         App::new()
             // Request logging middleware
             .wrap(Logger::default())
+            .wrap(Logger::new("%a %{User-Agent}i"))
             // CORS middleware
             .wrap(cors)
             .app_data(web::JsonConfig::default().limit(4096)) // <- limit size of the payload (global configuration)
             .service(health_check)
             .service(get_hello)
             .service(echo)
+            .default_service(web::to(|| HttpResponse::NotFound()))
             .route("/hey", web::get().to(manual_hello))
     })
     .bind(("0.0.0.0", 8080))?

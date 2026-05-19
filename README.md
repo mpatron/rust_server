@@ -10,6 +10,7 @@
 - Actix [https://github.com/actix/examples](https://github.com/actix/examples)
 - [https://oneuptime.com/blog/post/2026-02-01-rust-actix-web-rest-api/view](https://oneuptime.com/blog/post/2026-02-01-rust-actix-web-rest-api/view)
 - [https://oneuptime.com/blog/post/2026-01-07-rust-kubernetes-health-checks/view](https://oneuptime.com/blog/post/2026-01-07-rust-kubernetes-health-checks/view)
+- [https://github.com/franciscodelahoz/actix-web-boilerplate](https://github.com/franciscodelahoz/actix-web-boilerplate) Structure du code
 
 ## Construction de l'image docker avec podman
 
