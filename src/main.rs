@@ -1,8 +1,10 @@
 use actix_cors::Cors;
-use actix_web::{App, HttpResponse, HttpServer, Responder, get, middleware::Logger, post, web};
-use rust_server::hello::hello;
+use actix_web::{
+    App, HttpResponse, HttpServer, Responder, get, http::header::ContentType, middleware::Logger,
+    post, web,
+};
 use env_logger::Env;
-
+use rust_server::hello::hello;
 
 // Health check endpoint - useful for load balancers and monitoring
 #[get("/health")]
@@ -15,7 +17,7 @@ async fn health_check() -> impl Responder {
 
 #[get("/")]
 async fn get_hello() -> impl Responder {
-    HttpResponse::Ok().body(hello())
+    HttpResponse::Ok().insert_header(ContentType::plaintext()).body(hello())
 }
 
 #[post("/echo")]
@@ -24,7 +26,9 @@ async fn echo(req_body: String) -> impl Responder {
 }
 
 async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
+    HttpResponse::Ok()
+        .insert_header(ContentType::plaintext())
+        .body("Hey there!")
 }
 
 #[actix_web::main]
