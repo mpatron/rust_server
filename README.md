@@ -65,3 +65,7 @@ podman volume prune --force
 podman network prune --force
 podman system prune --all --volumes --build 
 ~~~
+
+mkdir -p src/{controllers,librairies,routes,services}
+mkdir -p src/librairies/{constants,middlewares,schemas,utils}
+touch src/{controllers.rs,librairies.rs,routes.rs,services.rs}
