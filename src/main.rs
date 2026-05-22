@@ -17,7 +17,9 @@ async fn health_check() -> impl Responder {
 
 #[get("/")]
 async fn get_hello() -> impl Responder {
-    HttpResponse::Ok().insert_header(ContentType::plaintext()).body(hello())
+    HttpResponse::Ok()
+        .insert_header(ContentType::plaintext())
+        .body(hello())
 }
 
 #[post("/echo")]
