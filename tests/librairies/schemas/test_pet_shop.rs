@@ -1,5 +1,5 @@
 use log::info;
-use rust_server::librairies::schemas::pet_shop::{Customer, Validate};
+use crate::librairies::schemas::pet_shop::{Customer, Validate};
 
 #[test]
 fn test_customer_new_validation() {
