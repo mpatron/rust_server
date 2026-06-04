@@ -8,16 +8,16 @@ fn test_customer_new_validation() {
     // Add your test assertions here
 
     let signup_data = Customer {
-        firstName: "Doe".to_string(),
-        lastName: "John".to_string(),
+        first_name: "Doe".to_string(),
+        last_name: "John".to_string(),
         email: "jdoe@example.com".to_string(),
         age: 19,
-        dateOfBirth: chrono::Utc::now(),
+        date_of_birth: chrono::Utc::now(),
         ssid: "123456789".to_string(),
         encryption: "AES".to_string(),
         password: "password123".to_string(),
         hidden: Some(false),
-        homeAddress: vec![],
+        home_address: vec![],
     };
 
     match signup_data.validate() {

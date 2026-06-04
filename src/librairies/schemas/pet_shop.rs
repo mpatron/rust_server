@@ -63,20 +63,20 @@ pub enum CreditCardType {
 pub struct Customer {
     pub ssid: String,
     #[validate(length(min = 1, max = 50))]
-    pub firstName: String,
+    pub first_name: String,
     #[validate(length(min = 1, max = 50))]
-    pub lastName: String,
+    pub last_name: String,
     #[validate(email)]
     pub email: String,
     #[serde(with = "chrono::serde::ts_seconds")]
-    pub dateOfBirth: DateTime<Utc>,
+    pub date_of_birth: DateTime<Utc>,
     #[validate(range(min = 0, max = 100))]
     pub age: i32,
     #[validate(length(min = 1, max = 256))]
     pub password: String,
     pub encryption: String,
     pub hidden: Option<bool>,
-    pub homeAddress: Vec<Option<Address>>,
+    pub home_address: Vec<Option<Address>>,
 }
 
 #[derive(Serialize, Deserialize, Validate, Debug, ToSchema, IntoParams)]
