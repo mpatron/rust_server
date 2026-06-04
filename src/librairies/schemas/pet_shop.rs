@@ -1,17 +1,19 @@
-use serde::{Serialize, Deserialize};
-use utoipa::{ToSchema, IntoParams};
+use serde::{Deserialize, Serialize};
+use utoipa::{IntoParams, ToSchema};
+use validator::Validate;
+use chrono::{DateTime, Utc};
 
 // https://github.com/agoncal/agoncal-application-petstore-ee7/tree/master/src/main/java/org/agoncal/application/petstore/model
 
 #[derive(Serialize, Deserialize, Validate, Debug, ToSchema, IntoParams)]
 pub struct Address {
-    #[validate(length(min = 5), length(max = 50))]
+    #[validate(length(min = 5, max = 50))]
     pub street1: String,
     pub street2: Option<String>,
-    #[validate(length(min = 2), length(max = 50))]
+    #[validate(length(min = 2, max = 50))]
     pub city: String,
     pub state: Option<String>,
-    #[validate(length(min = 1), length(max = 10))]
+    #[validate(length(min = 1, max = 10))]
     pub zipCode: String,
     pub country: Country,
 }
@@ -19,36 +21,37 @@ pub struct Address {
 #[derive(Serialize, Deserialize, Validate, Debug, ToSchema, IntoParams)]
 pub struct Category {
     pub id: i32,
-    #[validate(length(min = 1), length(max = 30))]
+    #[validate(length(min = 1, max = 30))]
     pub name: String,
-    #[validate(length(min = 1), length(max = 3000))]
+    #[validate(length(min = 1, max = 3000))]
     pub description: String,
 }
 
 #[derive(Serialize, Deserialize, Validate, Debug, ToSchema, IntoParams)]
 pub struct Country {
     pub id: i32,
-    #[validate(length(min = 2), length(max = 2))]
+    #[validate(length(min = 2, max = 2))]
     pub isoCode: String,
-    #[validate(length(min = 2), length(max = 80))]
+    #[validate(length(min = 2, max = 80))]
     pub name: String,
-    #[validate(length(min = 2), length(max = 80))]
+    #[validate(length(min = 2, max = 80))]
     pub printableName: String,
-    #[validate(length(min = 3), length(max = 3))]
+    #[validate(length(min = 3, max = 3))]
     pub iso3Code: String,
-    #[validate(length(min = 3), length(max = 3))]
+    #[validate(length(min = 3, max = 3))]
     pub numCode: String,
 }
 
-#[derive(Serialize, Deserialize, Validate, Debug, ToSchema, IntoParams)]
+#[derive(Serialize, Deserialize, Validate, Debug)]
 pub struct CreditCard {
-    #[validate(length(min = 1), length(max = 30))]
+    #[validate(length(min = 1, max = 30))]
     pub creditCardNumber: String,
     pub creditCardType: CreditCardType,
-    pub creditCardExpDate: time::Date,
+    #[serde(with = "chrono::serde::ts_seconds")]
+    pub creditCardExpDate: DateTime<Utc>,
 }
 
-#[derive(Serialize, Deserialize, Validate, Debug, ToSchema, IntoParams)]
+#[derive(Serialize, Deserialize, Debug, ToSchema)]
 pub enum CreditCardType {
     Visa,
     MasterCard,
@@ -56,20 +59,20 @@ pub enum CreditCardType {
     Discover,
 }
 
-#[derive(Serialize, Deserialize, Validate, Debug, ToSchema, IntoParams)]
+#[derive(Serialize, Deserialize, Validate, Debug)]
 pub struct Customer {
     pub ssid: String,
-    #[validate(length(min = 1), length(max = 50))]
+    #[validate(length(min = 1, max = 50))]
     pub firstName: String,
-    #[validate(length(min = 1), length(max = 50))]
+    #[validate(length(min = 1, max = 50))]
     pub lastName: String,
     #[validate(email)]
     pub email: String,
-    pub dateOfBirth: time::Date,
-    #[validate(minimum = 0)]
-    #[validate(maximum = 10)]
+    #[serde(with = "chrono::serde::ts_seconds")]
+    pub dateOfBirth: DateTime<Utc>,
+    #[validate(range(min = 0, max = 100))]
     pub age: i32,
-    #[validate(length(min = 1), length(max = 256))]
+    #[validate(length(min = 1, max = 256))]
     pub password: String,
     pub encryption: String,
     pub hidden: Option<bool>,
@@ -79,13 +82,13 @@ pub struct Customer {
 #[derive(Serialize, Deserialize, Validate, Debug, ToSchema, IntoParams)]
 pub struct Item {
     pub id: i32,
-    #[validate(length(min = 1), length(max = 30))]
+    #[validate(length(min = 1, max = 30))]
     pub name: String,
-    #[validate(length(min = 1), length(max = 3000))]
+    #[validate(length(min = 1, max = 3000))]
     pub description: String,
-    #[validate(length(min = 1), length(max = 512))]
+    #[validate(length(min = 1, max = 512))]
     pub imagePath: String,
-    #[validate(minimum = 0.0)]
+    #[validate(range(min = 0.0, max = 1000.0))]
     pub unitCost: f64,
     pub category: Category,
     pub product: Product,
@@ -94,7 +97,7 @@ pub struct Item {
 #[derive(Serialize, Deserialize, Validate, Debug, ToSchema, IntoParams)]
 pub struct OrderLine {
     pub id: i32,
-    #[validate(minimum = 1)]
+    #[validate(range(min = 1, max = 20))]
     pub quantity: i32,
     pub item: Item,
 }
@@ -102,17 +105,18 @@ pub struct OrderLine {
 #[derive(Serialize, Deserialize, Validate, Debug, ToSchema, IntoParams)]
 pub struct Product {
     pub id: i32,
-    #[validate(length(min = 1), length(max = 30))]
+    #[validate(length(min = 1, max = 30))]
     pub name: String,
-    #[validate(length(min = 1), length(max = 3000))]
+    #[validate(length(min = 1, max = 3000))]
     pub description: String,
     pub category: Category,
 }
 
-#[derive(Serialize, Deserialize, Validate, Debug, ToSchema, IntoParams)]
-pub struct PurchaseOrder {  
+#[derive(Serialize, Deserialize, Validate, Debug)]
+pub struct PurchaseOrder {
     pub id: i32,
-    pub orderDate: time::Date,
+    #[serde(with = "chrono::serde::ts_seconds")]
+    pub orderDate: DateTime<Utc>,
     #[validate(range(min = 0.0, max = 100000.0))]
     pub totalWithoutVat: f64,
     #[validate(range(min = 0.0, max = 100.0))]
