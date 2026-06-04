@@ -13,7 +13,7 @@ fn test_customer_new_validation() {
         email: "jdoe@example.com".to_string(),
         age: 19,
         date_of_birth: chrono::Utc::now(),
-        ssid: "123456789".to_string(),
+        id: uuid::Uuid::now_v7(),
         encryption: "AES".to_string(),
         password: "password123".to_string(),
         hidden: Some(false),
