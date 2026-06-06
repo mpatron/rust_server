@@ -1,7 +1,7 @@
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use validator::Validate;
 use uuid::Uuid;
+use validator::Validate;
 
 // https://github.com/agoncal/agoncal-application-petstore-ee7/tree/master/src/main/java/org/agoncal/application/petstore/model
 
@@ -136,7 +136,6 @@ pub struct PurchaseOrder {
     pub order_lines: Vec<OrderLine>,
 }
 
-
 impl Customer {
     pub fn new(
         first_name: String,
@@ -163,4 +162,3 @@ impl Customer {
         }
     }
 }
-

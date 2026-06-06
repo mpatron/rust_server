@@ -26,4 +26,3 @@ pub fn generate_customer(query: &Customer) -> String {
         query.hidden.unwrap_or(false)
     )
 }
-

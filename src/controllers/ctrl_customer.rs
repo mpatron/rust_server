@@ -24,7 +24,6 @@ pub async fn customer_handler(query: web::Query<Customer>) -> impl Responder {
 
     log::info!("Generated customer for ID: {}", query.id);
 
-    
     HttpResponse::Ok()
         .insert_header(ContentType::json())
         .body(customer)
