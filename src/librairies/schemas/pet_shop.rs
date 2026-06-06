@@ -135,3 +135,32 @@ pub struct PurchaseOrder {
     pub credit_card: CreditCard,
     pub order_lines: Vec<OrderLine>,
 }
+
+
+impl Customer {
+    pub fn new(
+        first_name: String,
+        last_name: String,
+        email: String,
+        date_of_birth: chrono::DateTime<chrono::Utc>,
+        age: i32,
+        password: String,
+        encryption: String,
+        hidden: Option<bool>,
+        home_address: Vec<Option<crate::librairies::schemas::pet_shop::Address>>,
+    ) -> Self {
+        Customer {
+            id: Uuid::now_v7(),
+            first_name,
+            last_name,
+            email,
+            date_of_birth,
+            age,
+            password,
+            encryption,
+            hidden,
+            home_address,
+        }
+    }
+}
+
