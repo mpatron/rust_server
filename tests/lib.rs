@@ -1,6 +1,4 @@
-pub mod hello;
 pub mod librairies;
-pub mod services;
 /*
 pub mod controllers;
 pub mod services;
