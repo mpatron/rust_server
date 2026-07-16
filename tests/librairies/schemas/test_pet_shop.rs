@@ -30,26 +30,28 @@ mod tests {
         info!("test_customer_new_validation passed");
     }
 
-    #[test]
-    fn test_integration() {
+    #[actix_web::test]
+    async fn test_integration() {
         info!("Running integration test");
         // Integration test example
         assert!(true); // Replace with actual integration test
     }
 
-    /*
     use actix_web::{App, http::header::ContentType, test};
-    use super::*;
+    use rust_server::controllers::ctrl_customer::customer_handler;
+    //use super::*;
 
-       #[actix_web::test]
-       async fn test_index_get() {
-           let app = test::init_service(App::new().service(generate_customer)).await;
-           let req = test::TestRequest::default()
-               .insert_header(ContentType::plaintext())
-               .to_request();
-           let resp = test::call_service(&app, req).await;
-           assert!(resp.status().is_success());
-       }
+    #[actix_web::test]
+    async fn test_index_get() {
+        let app = test::init_service(App::new().service(customer_handler)).await;
+        let req = test::TestRequest::get().uri("/customer")
+            //.insert_header(ContentType::plaintext())
+            .to_request();
+        let resp = test::call_service(&app, req).await;
+        print!("=>{}", resp.status().as_str());
+        assert!(resp.status().is_success());
+    }
+    /*
 
        #[actix_web::test]
        async fn test_index_post() {
