@@ -37,18 +37,18 @@ mod tests {
         assert!(true); // Replace with actual integration test
     }
 
-    use actix_web::{App, http::header::ContentType, test};
+    use actix_web::{App, test};
     use rust_server::controllers::ctrl_customer::customer_handler;
     //use super::*;
 
     #[actix_web::test]
     async fn test_index_get() {
         let app = test::init_service(App::new().service(customer_handler)).await;
-        let req = test::TestRequest::get().uri("/customer")
-            //.insert_header(ContentType::plaintext())
+        let req = test::TestRequest::get()
+            .uri("/customer?id=00000000-0000-0000-0000-000000000000&first_name=John&last_name=Doe&email=jdoe%40example.com&age=19&date_of_birth=1710000000&password=password123&encryption=AES&hidden=false")
             .to_request();
         let resp = test::call_service(&app, req).await;
-        print!("=>{}", resp.status().as_str());
+        println!("=>{}", resp.status().as_str());
         assert!(resp.status().is_success());
     }
     /*

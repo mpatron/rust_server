@@ -76,6 +76,7 @@ pub struct Customer {
     pub password: String,
     pub encryption: String,
     pub hidden: Option<bool>,
+    #[serde(default)]
     pub home_address: Vec<Option<Address>>,
 }
 

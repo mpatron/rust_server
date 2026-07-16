@@ -22,7 +22,7 @@ use crate::services::srv_customer::generate_customer;
 pub async fn customer_handler(query: web::Query<Customer>) -> impl Responder {
     let customer = generate_customer(&query);
 
-    log::info!("Generated customer for ID: {}", query.id);
+    log::info!("Generated customer for ID: {}, and customer data: {}", query.id, customer);
 
     HttpResponse::Ok()
         .insert_header(ContentType::json())
