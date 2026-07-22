@@ -71,3 +71,15 @@ mkdir -p src/{controllers,librairies,routes,services}
 mkdir -p src/librairies/{constants,middlewares,schemas,utils}
 touch src/{controllers.rs,librairies.rs,routes.rs,services.rs}
 ~~~
+
+## Update les dependencies
+
+~~~bash
+# Mettre à jour le Cargo.lock (versions compatibles)
+cargo update
+# Mettre à jour les versions dans Cargo.toml (versions maximales)
+cargo install cargo-edit
+cargo upgrade
+# Mettre à jour une dépendance spécifique
+cargo upgrade tokio
+~~~
