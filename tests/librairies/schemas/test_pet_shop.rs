@@ -1,5 +1,8 @@
 #[cfg(test)]
 mod tests {
+    use actix_web::{App, test};
+    use rust_server::controllers::ctrl_customer::customer_handler;
+    //use super::*;
     use log::info;
     use rust_server::librairies::schemas::pet_shop::Customer;
     use validator::Validate;
@@ -36,10 +39,6 @@ mod tests {
         // Integration test example
         assert!(true); // Replace with actual integration test
     }
-
-    use actix_web::{App, test};
-    use rust_server::controllers::ctrl_customer::customer_handler;
-    //use super::*;
 
     #[actix_web::test]
     async fn test_index_get() {
