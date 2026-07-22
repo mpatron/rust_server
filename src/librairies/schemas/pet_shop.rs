@@ -62,12 +62,15 @@ pub enum CreditCardType {
 #[derive(Serialize, Deserialize, Validate, Debug)]
 pub struct Customer {
     pub id: Uuid,
+    #[serde(rename = "firstName")]
     #[validate(length(min = 1, max = 50))]
     pub first_name: String,
-    #[validate(length(min = 1, max = 50))]
+    #[serde(rename = "lastName")]
+    #[validate(length(min = 1, max = 50))]    
     pub last_name: String,
     #[validate(email)]
     pub email: String,
+    #[serde(rename = "dateOfBirth")]
     #[serde(with = "chrono::serde::ts_seconds")]
     pub date_of_birth: DateTime<Utc>,
     #[validate(range(min = 0, max = 100))]
@@ -76,6 +79,7 @@ pub struct Customer {
     pub password: String,
     pub encryption: String,
     pub hidden: Option<bool>,
+    #[serde(rename = "homeAddress")]
     #[serde(default)]
     pub home_address: Vec<Option<Address>>,
 }
