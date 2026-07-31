@@ -66,7 +66,7 @@ pub struct Customer {
     #[validate(length(min = 1, max = 50))]
     pub first_name: String,
     #[serde(rename = "lastName")]
-    #[validate(length(min = 1, max = 50))]    
+    #[validate(length(min = 1, max = 50))]
     pub last_name: String,
     #[validate(email)]
     pub email: String,

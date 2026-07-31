@@ -25,7 +25,7 @@ mod tests {
             first_name: "Doe".to_string(),
             last_name: "John".to_string(),
             email: "jdoe@example.com".to_string(),
-            age: 101,
+            age: 11,
             date_of_birth: chrono::Utc::now(),
             id: uuid::Uuid::now_v7(),
             encryption: "AES".to_string(),
@@ -35,7 +35,10 @@ mod tests {
         };
 
         let signup_json = json!(signup_data);
-        error!("Validating signup_data like this: {}", signup_json.to_string());
+        error!(
+            "Validating signup_data like this: {}",
+            signup_json.to_string()
+        );
 
         match signup_data.validate() {
             Ok(_) => info!("Validation passed"),
@@ -61,7 +64,7 @@ mod tests {
         init_test_logger();
         let app = test::init_service(App::new().service(customer_handler)).await;
         let req = test::TestRequest::get()
-            .uri("/customer?id=00000000-0000-0000-0000-000000000000&first_name=John&last_name=Doe&email=jdoe%40example.com&age=19&date_of_birth=1710000000&password=password123&encryption=AES&hidden=false")
+            .uri("/customer?id=00000000-0000-0000-0000-000000000000&firstName=John&lastName=Doe&email=jdoe%40example.com&age=19&dateOfBirth=1710000000&password=password123&encryption=AES&hidden=false")
             .to_request();
         let resp = test::call_service(&app, req).await;
         println!("=>{}", resp.status().as_str());

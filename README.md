@@ -29,6 +29,7 @@ docker export rust-app | tar -tv # Voir qu'il n'y a rien d'autre que le binaire 
 ## Builder
 
 ~~~bash
+sudo dnf group install development-tools
 cargo install --no-default-features --force cargo-make
 cargo make cargo make container-test # Taille de ~82 MB l'image
 # Ou
