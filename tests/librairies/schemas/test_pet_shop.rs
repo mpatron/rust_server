@@ -4,7 +4,7 @@ mod tests {
     use env_logger::Env;
     use rust_server::controllers::ctrl_customer::customer_handler;
     //use super::*;
-    use log::{error, info};
+    use log::{debug, error, info};
     use rust_server::librairies::schemas::pet_shop::Customer;
     use serde_json::json;
     use validator::Validate;
@@ -35,7 +35,7 @@ mod tests {
         };
 
         let signup_json = json!(signup_data);
-        error!(
+        debug!(
             "Validating signup_data like this: {}",
             signup_json.to_string()
         );
