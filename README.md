@@ -84,3 +84,28 @@ cargo upgrade
 # Mettre à jour une dépendance spécifique
 cargo upgrade tokio
 ~~~
+
+## Converture de code des test
+
+~~~bash
+# Installez l'outil
+cargo install cargo-llvm-cov
+# Vérifiez également que les composants LLVM nécessaires sont présents
+rustup component add llvm-tools-preview
+# Générer un rapport de couverture
+cargo llvm-cov
+# Générer un rapport HTML -> target/llvm-cov/html/index.html
+cargo llvm-cov --html
+# Ouvrez-le dans votre navigateur
+xdg-open target/llvm-cov/html/index.html
+cargo llvm-cov --tests --html
+~~~
+
+Cela donne un pipeline qualité complet : formatage, lint, tests et couverture minimale garantie.
+
+~~~bash
+cargo fmt --check
+cargo clippy -- -D warnings
+cargo test
+cargo llvm-cov --html --fail-under-lines 85
+~~~
