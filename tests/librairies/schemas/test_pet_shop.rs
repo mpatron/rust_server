@@ -25,7 +25,7 @@ mod tests {
             first_name: "Doe".to_string(),
             last_name: "John".to_string(),
             email: "jdoe@example.com".to_string(),
-            age: 11,
+            age: 110,
             date_of_birth: chrono::Utc::now(),
             id: uuid::Uuid::now_v7(),
             encryption: "AES".to_string(),
@@ -44,7 +44,7 @@ mod tests {
             Ok(_) => info!("Validation passed"),
             Err(e) => {
                 error!("Validation failed: {:?}", e);
-                assert!(false);
+                assert!(e.field_errors().contains_key("age"));
             }
         }
 
