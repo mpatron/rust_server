@@ -80,7 +80,8 @@ touch src/{controllers.rs,librairies.rs,routes.rs,services.rs}
 cargo update
 # Mettre à jour les versions dans Cargo.toml (versions maximales)
 cargo install cargo-edit
-cargo upgrade
+# Oui il y a 2 verboses
+cargo upgrade --verbose --verbose
 # Mettre à jour une dépendance spécifique
 cargo upgrade tokio
 ~~~
